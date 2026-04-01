@@ -43,6 +43,8 @@ public class AuthService {
             return "User not found";
         }
 
+        System.out.println("ROLE: " + user.getRole());
+
         // 2. cek password
         boolean isMatch = passwordEncoder.matches(
                 request.getPassword(),
@@ -54,6 +56,8 @@ public class AuthService {
         }
 
         // 3. generate token
-        return jwtUtil.generateToken(user.getEmail());
-    }
+        return jwtUtil.generateToken(
+            user.getEmail(),
+            user.getRole().name());
+    };
 }

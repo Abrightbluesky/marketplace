@@ -4,7 +4,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Jwts;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class JwtFilter extends GenericFilter {
@@ -41,7 +48,30 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
     String token = header.substring(7);
 
     try {
-        jwtUtil.extractEmail(token);
+       String email =   jwtUtil.extractEmail(token);
+
+        // ambil role dari token 
+        String role = Jwts.parserBuilder()
+                        .setSigningKey(jwtUtil.getKey())
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody()
+                        .get("role", String.class);
+
+        // kasih ke Spring security 
+        UsernamePasswordAuthenticationToken auth = 
+        new UsernamePasswordAuthenticationToken(
+            email,
+            null,
+            Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + role)
+            )
+        );
+        
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        System.out.println("AUTH SET: " + email);
+        System.out.println("TOKEN:" + token);
+        System.out.println("EMAIL FROM TOKEN:" + token);
     } catch (Exception e){
         res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         return;

@@ -35,6 +35,13 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**", "/error").permitAll() // ✅ FIX
+                
+
+                // admin 
+                .requestMatchers("/products/add").hasRole("ADMIN")
+
+                // user dan admin boleh checkout 
+                .requestMatchers("/cart/**", "/orders/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().authenticated() // ✅ FIX
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // ✅ FIX
