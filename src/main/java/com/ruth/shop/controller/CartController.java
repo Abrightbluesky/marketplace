@@ -1,6 +1,9 @@
 package com.ruth.shop.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.ruth.shop.entity.Cart;
@@ -18,8 +21,10 @@ public class CartController {
 
     // 🔥 ADD
     @PostMapping("/add/{productId}")
-    public String add(@PathVariable Long productId, Principal principal){
-        return cartService.addToCart(productId, principal.getName());
+    public String add(@PathVariable Long productId ){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        return cartService.addToCart(productId, email);
     }
 
     // 🔍 GET CART

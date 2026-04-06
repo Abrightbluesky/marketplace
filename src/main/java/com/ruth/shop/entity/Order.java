@@ -21,13 +21,19 @@ public class Order {
 
     private Long id;
 
+    private String status;
+
     @ManyToOne
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 
+  
+
     private List<OrderItem> items;
 
     private Double totalPrice;
+
+    
     
 }

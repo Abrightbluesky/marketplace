@@ -9,6 +9,8 @@ import com.ruth.shop.dto.ProductRequest;
 import com.ruth.shop.dto.ProductResponse;
 import com.ruth.shop.service.ProductService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ProductResponse create(@RequestBody ProductRequest request){
+    public ProductResponse create(@Valid  @RequestBody ProductRequest request){
         return productService.create(request);
     }
 

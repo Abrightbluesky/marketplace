@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .requestMatchers("/products/add").hasRole("ADMIN")
 
                 // user dan admin boleh checkout 
+                .requestMatchers("/orders/admin").hasRole("ADMIN")
                 .requestMatchers("/cart/**", "/orders/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().authenticated() // ✅ FIX
             )
